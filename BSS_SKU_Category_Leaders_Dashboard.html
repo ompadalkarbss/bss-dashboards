@@ -27,6 +27,8 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,B
 .btn:hover{border-color:var(--accent);}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
 .btn.primary:hover{background:var(--accent2);}
+.btn.tagactive{background:#e0559b;border-color:#e0559b;color:#fff;}
+.btn.tagactive:hover{background:#c94687;}
 
 .filterbar{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:14px;display:flex;gap:24px;flex-wrap:wrap;align-items:flex-end;}
 .filtergrp{display:flex;flex-direction:column;gap:8px;min-width:170px;}
@@ -100,10 +102,7 @@ select{background:var(--card2);border:1px solid var(--border);color:var(--text);
       <label>Month</label>
       <select id="fMonth"></select>
     </div>
-    <div class="filtergrp">
-      <label>Product Tag</label>
-      <select id="fTag"></select>
-    </div>
+    <button class="btn" id="strawberryBtn">🍓 Strawberry</button>
     <button class="btn" id="resetBtn">Reset Filters</button>
   </div>
   <div class="showing" id="showingLine"></div>
@@ -157,16 +156,18 @@ function initFilters(){
   fm.value = state.month;
   fm.onchange = ()=>{ state.month = fm.value; renderAll(); };
 
-  const ft = document.getElementById('fTag');
-  TAGS.forEach(t=>{
-    const o=document.createElement('option'); o.value=t.key; o.textContent=t.label; ft.appendChild(o);
-  });
-  ft.value = state.tag;
-  ft.onchange = ()=>{ state.tag = ft.value; renderAll(); };
+  const sb = document.getElementById('strawberryBtn');
+  sb.onclick = ()=>{
+    state.tag = (state.tag==='strawberry') ? 'all' : 'strawberry';
+    sb.classList.toggle('tagactive', state.tag==='strawberry');
+    renderAll();
+  };
 
   document.getElementById('resetBtn').onclick = ()=>{
     state.channel='All'; state.month=D.default_month || D.months[D.months.length-1]; state.tag='all';
-    fc.value=state.channel; fm.value=state.month; ft.value=state.tag; renderAll();
+    fc.value=state.channel; fm.value=state.month;
+    sb.classList.remove('tagactive');
+    renderAll();
   };
 }
 
